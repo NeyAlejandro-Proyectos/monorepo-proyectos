@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick & Morty - Monorepo BFF (API Composition)</title>
+    <script>
+        const originalWarn = console.warn;
+        console.warn = (...args) => {
+            if (typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) return;
+            originalWarn.apply(console, args);
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-emerald-500 selection:text-slate-950">
+
+    <!-- Header -->
+    <header class="border-b border-emerald-500/20 bg-slate-900/80 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-pulse shadow-lg shadow-emerald-500/30 flex items-center justify-center font-extrabold text-slate-950 text-lg">
+                    R&M
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-emerald-400 via-lime-300 to-cyan-400 bg-clip-text text-transparent">
+                        Rick & Morty API Composition
+                    </h1>
+                    <p class="text-xs text-slate-400">Monorepo Spring Boot (RestTemplate) + Vanilla JS</p>
+                </div>
+            </div>
+
+            <!-- Input de búsqueda con Debounce estricto de 4000ms -->
+            <div class="w-full md:w-96 relative">
+                <div class="relative flex items-center">
+                    <svg class="w-5 h-5 text-emerald-400 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="Buscar personaje por nombre (delay 4000ms)..."
+                        autocomplete="off"
+                        class="w-full pl-11 pr-10 py-2.5 bg-slate-950/90 border border-emerald-500/40 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                    />
+                    <div id="debounceIndicator" class="hidden absolute right-3">
+                        <span class="flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </span>
+                    </div>
+                </div>
+                <p id="debounceStatus" class="text-[11px] text-emerald-400/80 mt-1 hidden">
+                    Esperando 4000ms sin escritura antes de consultar /api/personaje/buscar...
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Contenedor dinámico donde app.js inyecta las tarjetas con innerHTML y Template Literals -->
+        <section id="charactersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center"></section>
+    </main>
+
+    <!-- Contenedor dinámico para el Modal generado 100% desde app.js con innerHTML y Template Literals -->
+    <div id="modalContainer"></div>
+
+    <!-- Script externo Vanilla JS -->
+    <script src="app.js"></script>
+</body>
+</html>
