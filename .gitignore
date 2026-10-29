@@ -1,0 +1,28 @@
+# Maven & Java
+target/
+**/target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Node, Turborepo & Playwright
+node_modules/
+**/node_modules/
+package-lock.json
+**/package-lock.json
+.turbo/
+**/.turbo/
+test-results/
+**/test-results/
+playwright-report/
+**/playwright-report/
+
+# IDEs & Local Extensions
+.github/
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+**/.vscode/
+.classpath
+.project
+.settings/

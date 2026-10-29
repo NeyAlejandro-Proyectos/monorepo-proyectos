@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  rickandmorty-bff:
+    build:
+      context: ./apps/rickandmorty-bff
+      dockerfile: Dockerfile
+    container_name: rickandmorty-bff
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  taller-backend:
+    build:
+      context: ./apps/taller-backend
+      dockerfile: Dockerfile
+    container_name: taller-backend
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
