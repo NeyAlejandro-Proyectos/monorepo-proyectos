@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Panel para gestionar estudiantes y consultar sus cursos." />
+    <title>Estudiantes | Aula</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root { color-scheme: light; }
+      body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .modal-visible { animation: fade-in 180ms ease-out; }
+      @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <header class="relative overflow-hidden bg-slate-950 text-white">
+      <div aria-hidden="true" class="absolute -right-24 -top-36 h-96 w-96 rounded-full bg-indigo-500/20 blur-3xl"></div>
+      <div aria-hidden="true" class="absolute -bottom-48 left-1/3 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl"></div>
+      <div class="relative mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-8 lg:px-10">
+        <nav class="flex items-center justify-between">
+          <a href="#" class="flex items-center gap-3" aria-label="Aula, inicio">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-500 text-lg font-bold shadow-lg shadow-indigo-950/40">a.</span>
+            <span class="text-lg font-semibold tracking-tight">aula<span class="text-indigo-300">.</span></span>
+          </a>
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Panel de estudiantes
+          </span>
+        </nav>
+        <div class="mt-14 max-w-2xl sm:mt-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-300">Comunidad de aprendizaje</p>
+          <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Cada estudiante,<br class="hidden sm:block" /><span class="text-slate-400">un mundo por descubrir.</span></h1>
+          <p class="mt-5 max-w-xl text-base leading-7 text-slate-300">Administra tu comunidad, encuentra a cada estudiante y conoce lo que está aprendiendo.</p>
+        </div>
+        <div class="mt-10 flex flex-wrap gap-3">
+          <div class="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 backdrop-blur">
+            <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Estudiantes</p>
+            <p id="student-count" class="mt-1 text-2xl font-semibold">—</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 backdrop-blur">
+            <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Estado</p>
+            <p id="connection-status" class="mt-1 flex items-center gap-2 text-sm font-semibold"><span class="h-2 w-2 rounded-full bg-amber-400"></span>Conectando…</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
+      <section aria-labelledby="create-heading" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+          <div>
+            <p class="text-sm font-semibold text-indigo-600">Nuevo registro</p>
+            <h2 id="create-heading" class="mt-1 text-2xl font-semibold tracking-tight">Agregar estudiante</h2>
+            <p class="mt-2 text-sm text-slate-500">Completa los datos para sumar a alguien a la comunidad.</p>
+          </div>
+          <span class="hidden rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 sm:inline-flex">FORMULARIO</span>
+        </div>
+
+        <form id="student-form" class="mt-7" novalidate>
+          <div class="grid gap-5 md:grid-cols-2">
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">Nombre completo</span>
+              <input id="name" name="nombre" type="text" autocomplete="name" maxlength="120" placeholder="Ej. Valentina Rojas" required class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />
+            </label>
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">Correo electrónico</span>
+              <input id="email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="valentina@correo.com" required class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />
+            </label>
+            <label class="block md:col-span-2">
+              <span class="mb-2 block text-sm font-medium text-slate-700">Curso</span>
+              <input id="course" name="curso" type="text" maxlength="120" placeholder="Ej. Diseño de interfaces" required class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />
+            </label>
+            <label class="block md:col-span-2">
+              <span class="mb-2 block text-sm font-medium text-slate-700">Descripción <span class="font-normal text-slate-400">(opcional)</span></span>
+              <textarea id="description" name="descripcion" rows="3" maxlength="2000" placeholder="Cuéntanos un poco sobre sus intereses o metas…" class="w-full resize-y rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"></textarea>
+            </label>
+          </div>
+          <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button id="submit-button" type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-60">
+              <svg aria-hidden="true" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m-7-7h14" /></svg>
+              <span id="submit-label">Guardar estudiante</span>
+            </button>
+            <p id="form-message" role="status" aria-live="polite" class="min-h-5 text-sm text-slate-500"></p>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="directory-heading" class="mt-14">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="text-sm font-semibold text-indigo-600">Directorio</p>
+            <h2 id="directory-heading" class="mt-1 text-2xl font-semibold tracking-tight">Conoce a tus estudiantes</h2>
+            <p class="mt-2 text-sm text-slate-500">Selecciona una tarjeta para ver el perfil completo.</p>
+          </div>
+          <label class="relative block w-full sm:max-w-sm">
+            <span class="sr-only">Buscar por nombre o curso</span>
+            <svg aria-hidden="true" class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7" /><path stroke-linecap="round" d="m20 20-4-4" /></svg>
+            <input id="search" type="search" placeholder="Buscar por nombre o curso…" class="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />
+          </label>
+        </div>
+        <div id="directory-notice" class="mt-7 hidden" role="status" aria-live="polite"></div>
+        <div id="student-grid" class="mt-7 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"></div>
+      </section>
+      <footer class="mt-16 border-t border-slate-200 py-6 text-center text-xs text-slate-400">Aula · Gestión de estudiantes</footer>
+    </main>
+
+    <div id="student-modal" class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-hidden="true">
+      <div class="modal-visible my-auto w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl sm:p-8" data-modal-panel>
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex min-w-0 items-center gap-4">
+            <div id="modal-avatar" class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-indigo-100 text-lg font-semibold text-indigo-700" aria-hidden="true"></div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold uppercase tracking-[0.16em] text-indigo-600">Perfil de estudiante</p>
+              <h2 id="modal-name" class="mt-1 break-words text-xl font-semibold tracking-tight"></h2>
+            </div>
+          </div>
+          <button id="close-modal" type="button" aria-label="Cerrar ventana" class="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-4 focus:ring-indigo-100">
+            <svg aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <dl class="mt-8 space-y-5">
+          <div><dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Curso</dt><dd id="modal-course" class="mt-1 text-sm font-medium text-slate-800"></dd></div>
+          <div><dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Correo electrónico</dt><dd id="modal-email" class="mt-1 break-all text-sm font-medium text-slate-800"></dd></div>
+          <div><dt class="text-xs font-semibold uppercase tracking-wider text-slate-400">Descripción</dt><dd id="modal-description" class="mt-2 whitespace-pre-wrap break-words text-sm leading-7 text-slate-600"></dd></div>
+        </dl>
+        <button id="modal-done" type="button" class="mt-8 w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200">Cerrar perfil</button>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "/api/estudiantes";
+      const students = [];
+      const grid = document.querySelector("#student-grid");
+      const searchInput = document.querySelector("#search");
+      const countElement = document.querySelector("#student-count");
+      const connectionStatus = document.querySelector("#connection-status");
+      const notice = document.querySelector("#directory-notice");
+      const form = document.querySelector("#student-form");
+      const formMessage = document.querySelector("#form-message");
+      const submitButton = document.querySelector("#submit-button");
+      const submitLabel = document.querySelector("#submit-label");
+      const modal = document.querySelector("#student-modal");
+      const closeModalButton = document.querySelector("#close-modal");
+      let lastFocusedElement = null;
+
+      function setConnectionStatus(connected) {
+        connectionStatus.replaceChildren();
+        const indicator = document.createElement("span");
+        indicator.className = `h-2 w-2 rounded-full ${connected ? "bg-emerald-400" : "bg-rose-400"}`;
+        connectionStatus.append(indicator, document.createTextNode(connected ? "Conectado" : "Sin conexión"));
+      }
+
+      function setNotice(message, type = "error", action) {
+        notice.replaceChildren();
+        notice.className = "mt-7 rounded-2xl border px-5 py-4 text-sm " + (type === "error" ? "border-rose-200 bg-rose-50 text-rose-800" : "border-slate-200 bg-white text-slate-600");
+        const text = document.createElement("p");
+        text.textContent = message;
+        notice.append(text);
+        if (action) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = "Reintentar";
+          button.className = "mt-3 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-rose-700 ring-1 ring-rose-200 transition hover:bg-rose-100";
+          button.addEventListener("click", action, { once: true });
+          notice.append(button);
+        }
+        notice.classList.remove("hidden");
+      }
+
+      function clearNotice() {
+        notice.replaceChildren();
+        notice.classList.add("hidden");
+      }
+
+      function initials(name) {
+        return name.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0)).join("").toLocaleUpperCase("es");
+      }
+
+      function getAvatarColor(name) {
+        const colors = ["bg-indigo-100 text-indigo-700", "bg-cyan-100 text-cyan-700", "bg-amber-100 text-amber-700", "bg-emerald-100 text-emerald-700", "bg-fuchsia-100 text-fuchsia-700", "bg-orange-100 text-orange-700"];
+        const index = Array.from(name).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+        return colors[index % colors.length];
+      }
+
+      function createStudentCard(student) {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "group flex min-h-64 w-full flex-col rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-950/5 focus:outline-none focus:ring-4 focus:ring-indigo-100";
+        card.setAttribute("aria-label", `Ver perfil de ${student.nombre || "estudiante"}`);
+        card.addEventListener("click", () => openModal(student));
+
+        const top = document.createElement("div");
+        top.className = "flex w-full items-center gap-4";
+        const avatar = document.createElement("span");
+        avatar.className = `grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-sm font-semibold ${getAvatarColor(student.nombre || "")}`;
+        avatar.textContent = initials(student.nombre || "?");
+        const identity = document.createElement("span");
+        identity.className = "min-w-0 flex-1";
+        const name = document.createElement("span");
+        name.className = "block truncate text-base font-semibold text-slate-900";
+        name.textContent = student.nombre || "Sin nombre";
+        const course = document.createElement("span");
+        course.className = "mt-1 block truncate text-sm text-slate-500";
+        course.textContent = student.curso || "Curso sin especificar";
+        identity.append(name, course);
+        const arrow = document.createElement("span");
+        arrow.className = "grid h-9 w-9 shrink-0 place-items-center rounded-full text-slate-400 transition group-hover:bg-indigo-50 group-hover:text-indigo-600";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.innerHTML = '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+        top.append(avatar, identity, arrow);
+
+        const divider = document.createElement("span");
+        divider.className = "my-5 block h-px w-full bg-slate-100";
+        const descriptionLabel = document.createElement("span");
+        descriptionLabel.className = "block text-xs font-semibold uppercase tracking-wider text-slate-400";
+        descriptionLabel.textContent = "Sobre el estudiante";
+        const description = document.createElement("span");
+        description.className = "mt-2 block text-sm leading-6 text-slate-600";
+        const fullDescription = (student.descripcion || "").trim();
+        description.textContent = fullDescription ? `${fullDescription.slice(0, 50)}${fullDescription.length > 50 ? "…" : ""}` : "Aún no hay una descripción para este perfil.";
+
+        card.append(top, divider, descriptionLabel, description);
+        return card;
+      }
+
+      function renderStudents() {
+        const query = searchInput.value.trim().toLocaleLowerCase("es");
+        const filteredStudents = students.filter((student) => [student.nombre, student.curso].some((value) => (value || "").toLocaleLowerCase("es").includes(query)));
+        grid.replaceChildren();
+        countElement.textContent = String(students.length);
+        if (students.length === 0) {
+          setNotice("Todavía no hay estudiantes registrados. Usa el formulario para agregar el primero.", "info");
+          return;
+        }
+        clearNotice();
+        if (filteredStudents.length === 0) {
+          setNotice("No encontramos estudiantes que coincidan con esa búsqueda.", "info");
+          return;
+        }
+        filteredStudents.forEach((student) => grid.append(createStudentCard(student)));
+      }
+
+      async function loadStudents() {
+        try {
+          const response = await fetch(API_URL, { headers: { Accept: "application/json" } });
+          if (!response.ok) throw new Error(`No se pudo cargar la lista (HTTP ${response.status}).`);
+          const data = await response.json();
+          if (!Array.isArray(data)) throw new Error("La respuesta de la API no tiene el formato esperado.");
+          students.splice(0, students.length, ...data);
+          setConnectionStatus(true);
+          renderStudents();
+        } catch (error) {
+          setConnectionStatus(false);
+          grid.replaceChildren();
+          countElement.textContent = "—";
+          setNotice(`${error.message} Comprueba que Spring Boot esté activo y que CORS permita este origen.`, "error", loadStudents);
+        }
+      }
+
+      function openModal(student) {
+        lastFocusedElement = document.activeElement;
+        document.querySelector("#modal-name").textContent = student.nombre || "Sin nombre";
+        document.querySelector("#modal-avatar").textContent = initials(student.nombre || "?");
+        document.querySelector("#modal-avatar").className = `grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-lg font-semibold ${getAvatarColor(student.nombre || "")}`;
+        document.querySelector("#modal-course").textContent = student.curso || "Curso sin especificar";
+        document.querySelector("#modal-email").textContent = student.email || "Correo sin especificar";
+        document.querySelector("#modal-description").textContent = (student.descripcion || "").trim() || "Aún no hay una descripción para este perfil.";
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("overflow-hidden");
+        closeModalButton.focus();
+      }
+
+      function closeModal() {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("overflow-hidden");
+        if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        formMessage.textContent = "";
+        if (!form.reportValidity()) return;
+        const student = {
+          nombre: document.querySelector("#name").value.trim(),
+          email: document.querySelector("#email").value.trim(),
+          curso: document.querySelector("#course").value.trim(),
+          descripcion: document.querySelector("#description").value.trim(),
+        };
+        if (!student.nombre || !student.email || !student.curso) {
+          formMessage.textContent = "Nombre, correo y curso no pueden quedar vacíos.";
+          formMessage.className = "min-h-5 text-sm text-rose-700";
+          return;
+        }
+        submitButton.disabled = true;
+        submitLabel.textContent = "Guardando…";
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify(student),
+          });
+          if (!response.ok) {
+            const detail = await response.text();
+            throw new Error(detail || `No se pudo guardar el estudiante (HTTP ${response.status}).`);
+          }
+          const savedStudent = await response.json();
+          students.unshift(savedStudent);
+          form.reset();
+          searchInput.value = "";
+          formMessage.textContent = "Estudiante agregado correctamente.";
+          formMessage.className = "min-h-5 text-sm text-emerald-700";
+          setConnectionStatus(true);
+          renderStudents();
+          document.querySelector("#name").focus();
+        } catch (error) {
+          formMessage.textContent = `No se pudo guardar: ${error.message}`;
+          formMessage.className = "min-h-5 text-sm text-rose-700";
+        } finally {
+          submitButton.disabled = false;
+          submitLabel.textContent = "Guardar estudiante";
+        }
+      });
+
+      searchInput.addEventListener("input", renderStudents);
+      closeModalButton.addEventListener("click", closeModal);
+      document.querySelector("#modal-done").addEventListener("click", closeModal);
+      modal.addEventListener("click", (event) => { if (event.target === modal) closeModal(); });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !modal.classList.contains("hidden")) closeModal(); });
+      loadStudents();
+    </script>
+  </body>
+</html>
