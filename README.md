@@ -17,6 +17,10 @@ All development tasks, AWS infrastructure upgrades, and E2E automation workflows
 | **[KAN-8](https://charroney497.atlassian.net/browse/KAN-8)** | Implement End-to-End Automated Test Suite with Playwright across the Monorepo | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-8) |
 | **[KAN-9](https://charroney497.atlassian.net/browse/KAN-9)** | Configure AWS Application Load Balancer (ALB) Target Group and Spring Boot Health Endpoint | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-9) |
 | **[KAN-10](https://charroney497.atlassian.net/browse/KAN-10)** | Expose Monorepo Services via AWS API Gateway and Restrict Direct Port 8080 Access | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-10) |
+| **[KAN-11](https://charroney497.atlassian.net/browse/KAN-11)** | Provision Three Identical AWS EC2 Nodes for Multi-Instance Monorepo Deployment | `In Progress / Done` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-11) |
+| **[KAN-12](https://charroney497.atlassian.net/browse/KAN-12)** | Configure AWS Application Load Balancer (ALB) Across Three EC2 Instances for High-Demand Traffic Distribution | `In Progress / Done` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-12) |
+| **[KAN-13](https://charroney497.atlassian.net/browse/KAN-13)** | Integrate AWS API Gateway HTTP Proxy with Multi-Instance Load Balancer DNS | `In Progress / Done` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-13) |
+| **[KAN-14](https://charroney497.atlassian.net/browse/KAN-14)** | Configure Cloudflare Custom Domain DNS and Reverse Proxy for AWS API Gateway and ALB | `In Progress / Done` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-14) |
 
 ---
 
