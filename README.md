@@ -21,6 +21,7 @@ All development tasks, AWS infrastructure upgrades, and E2E automation workflows
 | **[KAN-12](https://charroney497.atlassian.net/browse/KAN-12)** | Configure AWS Application Load Balancer (ALB) Across Three EC2 Instances for High-Demand Traffic Distribution | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-12) |
 | **[KAN-13](https://charroney497.atlassian.net/browse/KAN-13)** | Integrate AWS API Gateway HTTP Proxy with Multi-Instance Load Balancer DNS | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-13) |
 | **[KAN-14](https://charroney497.atlassian.net/browse/KAN-14)** | Configure Cloudflare Custom Domain DNS and Reverse Proxy for AWS API Gateway and ALB | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-14) |
+| **[KAN-15](https://charroney497.atlassian.net/browse/KAN-15)** | Implement Grafana k6 Load Testing Script (`load-test.js`) and Server Performance Metrics Benchmark | `Done (Listo)` | [View in Jira](https://charroney497.atlassian.net/browse/KAN-15) |
 
 ---
 

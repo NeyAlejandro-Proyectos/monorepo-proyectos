@@ -11,7 +11,8 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "test:rickandmorty": "turbo run test --filter=rickandmorty-bff",
-    "test:taller": "turbo run test --filter=taller-backend"
+    "test:taller": "turbo run test --filter=taller-backend",
+    "test:load": "k6 run load-test.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
